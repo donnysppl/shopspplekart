@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function page() {
+export default function CreateShipment() {
 
     interface SourceData {
         first_name: string;
