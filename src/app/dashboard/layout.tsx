@@ -1,5 +1,8 @@
-import DashNav from '@/components/DashNav';
+import dynamic from 'next/dynamic';
 import { Toaster } from 'react-hot-toast';
+
+// Client Components:
+const DashNav = dynamic(() => import('@/components/DashNav'))
 
 export default function DashboardLayout({
     children, // will be a page or nested layout

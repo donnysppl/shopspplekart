@@ -13,6 +13,14 @@ const dashNavList = [
                 innernavlink: "/dashboard/create-shipment"
             },
             {
+                innernavname: "List Shipment",
+                innernavlink: "/dashboard/list-shipment"
+            },
+            {
+                innernavname: "Reverse",
+                innernavlink: "/dashboard/reverse"
+            },
+            {
                 innernavname: "Track Shipment",
                 innernavlink: "/dashboard/track-shipment"
             }

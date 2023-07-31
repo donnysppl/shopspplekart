@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useRouter } from 'next/navigation';
-import toast,{Toaster} from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+import Loader from '@/components/Loader';
 
 export default function Home() {
 
@@ -13,8 +14,10 @@ export default function Home() {
   }
 
   const router = useRouter();
+  console.log(router)
 
   const [showPass, setshowPass] = useState(false);
+  const [loader, setloader] = useState(false);
 
   const [logindata, setlogindata] = useState<AdminData>({
     email: '',
@@ -22,7 +25,8 @@ export default function Home() {
   })
 
   const onLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-e.preventDefault();
+    e.preventDefault();
+    setloader(true);
     await fetch('/api/admin/login', {
       method: 'POST',
       body: JSON.stringify(logindata),
@@ -33,12 +37,15 @@ e.preventDefault();
         if (res.status === 200) {
           toast.success(res.message);
           router.push("/dashboard");
+          setloader(false);
         }
         else if (res.status === 400) {
           toast.error(res.message);
+          setloader(false);
         }
         else if (res.status === 500) {
           toast.error(res.message);
+          setloader(false);
         }
       })
       .catch(err => {
@@ -49,14 +56,17 @@ e.preventDefault();
 
   return (
     <>
-    <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster position="bottom-center" reverseOrder={false} />
       <section>
         <div className="container mx-auto flex justify-center items-center">
 
           <div className="w-full md:w-2/4 lg:w-1/3 h-screen p-6">
             <div className="border border-gray-700 w-full h-full rounded-2xl">
 
-              <div className="login-form-part flex flex-col justify-center h-full p-6">
+              <div className="login-form-part flex flex-col justify-center h-full p-6 relative overflow-hidden">
+                {
+                  loader ? <Loader/> : null
+                }
                 <h1 className="mb-4 text-center">Welcome Back</h1>
 
                 <form onSubmit={onLoginSubmit} >
