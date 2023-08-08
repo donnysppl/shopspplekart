@@ -15,6 +15,7 @@
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.14",
     "bcryptjs": "^2.4.3",
+    "bwip-js": "^3.4.5",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
     "jsonwebtoken": "^9.0.1",
