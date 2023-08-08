@@ -9,28 +9,28 @@ export default function ListShipment() {
     const [listdata, setlistdata] = useState();
 
     useEffect(() => {
-      const listShipData = async () => {
-        await fetch('/api/ekart-shipment/list', {
-            method: 'GET',
-        }).then(res => res.json())
-            .then(res => {
-                console.log(res);
-                if (res.status === 200) {
-                    toast.success(res.message);
-                    setlistdata(res.result);
-                }
-                else if (res.status === 400) {
-                    toast.error(res.message);
-                }
-                else if (res.status === 500) {
-                    toast.error(res.message);
-                }
-            })
-            .catch(err => {
-                console.log(err);
-            })
-      }
-      listShipData();
+        const listShipData = async () => {
+            await fetch('/api/ekart-shipment/list', {
+                method: 'GET',
+            }).then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        toast.success(res.message);
+                        setlistdata(res.result);
+                    }
+                    else if (res.status === 400) {
+                        toast.error(res.message);
+                    }
+                    else if (res.status === 500) {
+                        toast.error(res.message);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+        listShipData();
     }, [])
 
     const data = useMemo(() => listdata, [listdata]);
@@ -69,13 +69,13 @@ export default function ListShipment() {
         //     )
         // }
     ]
-    
+
     return (
         <div className="container mx-auto p-8">
             <div className="border border-gray-500 p-8 rounded-2xl">
                 <h2 className="text-center">List Shipment</h2>
 
-                <CommonTable data={data} columns={columns} />
+                {data ? <CommonTable data={data} columns={columns} /> : null}
             </div>
         </div>
     )
