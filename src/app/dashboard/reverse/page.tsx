@@ -63,7 +63,7 @@ export default function Reverse() {
         { loader ? 'Loading...' :
           wooOrderData && wooOrderData.map((item, index) => {
             return (
-              <li key={index}>{item.billing.first_name}</li>
+              // <li key={index}>{item.billing.first_name}</li>
             )
           })
         }
