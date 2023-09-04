@@ -11,6 +11,10 @@ export async function GET() {
             httpOnly:true,
             expires: new Date(0)
          });
+         res.cookies.set("barear-token","",{
+            httpOnly:true,
+            expires: new Date(0)
+         });
          return res;
 
     } catch (error:any) {

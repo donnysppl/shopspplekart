@@ -1,6 +1,8 @@
 "use client";
 
 import CommonTable from '@/components/CommonTable';
+import onCancelShipment from '@/helper/Helper';
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
@@ -17,7 +19,9 @@ export default function ListShipment() {
                     console.log(res);
                     if (res.status === 200) {
                         toast.success(res.message);
-                        setlistdata(res.result);
+                        const data = res.result;
+                        const dataRev = data.reverse();
+                        setlistdata(dataRev);
                     }
                     else if (res.status === 400) {
                         toast.error(res.message);
@@ -40,34 +44,32 @@ export default function ListShipment() {
         {
             header: 'ID',
             accessorFn: (row, index) => index + 1,
-            footer: 'ID',
         },
         {
             header: 'Tracking ID',
-            accessorKey: 'trackingID',
+            accessorFn: (row, index) => row.resultarray[0].response[0].tracking_id ? row.resultarray[0].response[0].tracking_id : '',
         },
         {
             header: 'Status',
-            accessorKey: 'status',
-            footer: 'Brand Slug',
+            accessorFn: (row, index) => row.resultarray[0].response[0].status,
+        },
+        {
+            header: 'Order Id',
+            accessorFn: (row, index) => row.ekartarray[0].services[0].service_details[0].shipment.shipment_items[0].item_attributes[0].value,
         },
         {
             header: 'Customer Name',
-            accessorFn: (row, index) => row.destinationdata[0].first_name,
+            accessorFn: (row, index) => row.ekartarray[0].services[0].service_details[0].service_data.destination.address.first_name,
         },
         {
-            header: 'Product ID',
-            accessorFn: (row, index) => row.shipmentItemDetail[0].product_id,
+            header: 'Action',
+            cell: cell => (
+                <div className="flex gap-5">
+                    <Link href={`/dashboard/list-shipment/${cell.row.original._id}`}><button className="text-green-400 border border-green-400 px-1.5 py-1 rounded-lg">Open</button></Link>
+                    <button onClick={(e) => onCancelShipment(e,cell.row.original._id)} className="text-red-400 border border-red-400 px-1.5 py-1 rounded-lg">Cancel</button>
+                </div>
+            )
         }
-        // {
-        //     header: 'Action',
-        //     cell: cell => (
-        //         <div className="flex gap-5">
-        //             <Link href={`/backend-dashboard/brand/brand-edit/${cell.row.original._id}`}><button className="text-green-400">Edit</button></Link>
-        //             <button onClick={(e) => onDeleteBrand(e, cell.row.original._id)} className="text-red-400">Delete</button>
-        //         </div>
-        //     )
-        // }
     ]
 
     return (
@@ -80,3 +82,5 @@ export default function ListShipment() {
         </div>
     )
 }
+
+

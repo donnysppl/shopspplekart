@@ -1,30 +1,14 @@
-import EkartShip from '@/models/ekartShipment';
 import { NextRequest, NextResponse } from "next/server";
-import { connect } from "@/dbConfig/dbConfig";
 import fetch from 'node-fetch';
-
-interface EkartCreateResonse {
-    tracking_id: string;
-    shipment_payment_link: string;
-    status: string;
-    status_code: number;
-    is_parked: string;
-}
-
-interface EkartCreateShipRes {
-    response: EkartCreateResonse[];
-    request_id: string;
-    unauthorised?: string;
-}
 
 export async function POST(req: NextRequest) {
     try {
-        await connect();
 
         const data = await req.json();
+        const trackingId = data.tracking_ids[0];
         const authorizationHeader = req.headers.get('authorization');
 
-        const apifetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/shipments/create`, {
+        const apifetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/shipments/track`, {
             method: 'POST',
             headers: {
                 'Access-Control-Allow-Origin': `${process.env.NEXT_PUBLIC_ALLOW_ORIGIN}`,
@@ -35,49 +19,46 @@ export async function POST(req: NextRequest) {
             },
             body: JSON.stringify(data)
         });
-        const responseData = await apifetch.json() as EkartCreateShipRes;
-        console.log(apifetch.status, responseData);
 
-
+        const responseData = await apifetch.json()
 
         if (apifetch.status === 200) {
-            const newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData })
-            const savEkartShipData = await newEkartShipData.save();
             return NextResponse.json({
                 status: 200,
-                message: 'Ekart Shipment Created successfully',
+                message: 'Data Found',
                 success: true,
-                result: responseData,
+                responseData,
             }, { status: 200 })
         }
         else if (apifetch.status === 400) {
             return NextResponse.json({
                 status: 400,
                 message: 'Bad request',
-                result: responseData,
+                responseData,
             }, { status: 400 })
         }
         else if (apifetch.status === 401) {
             return NextResponse.json({
                 status: 401,
                 message: 'User Unauthorised',
-                result: responseData,
+                responseData,
             }, { status: 401 })
         }
         else if (apifetch.status === 404) {
             return NextResponse.json({
                 status: 404,
                 message: 'Resource not found',
-                result: responseData,
+                responseData,
             }, { status: 404 })
         }
         else if (apifetch.status === 500) {
             return NextResponse.json({
                 status: 500,
                 message: 'Service is down',
-                result: responseData,
+                responseData,
             }, { status: 500 })
         }
+
 
     } catch (error) {
         console.log(error)

@@ -4,26 +4,14 @@ const EkartShipmentSchema = new Schema({
     ekartarray:{
         type: Array,
     },
-    sourcedata:{
+    resultarray:{
         type: Array,
-        required: [true, "Please provide a Ekart Source data"],
     },
-    destinationdata:{
+    cancelarray:{
         type: Array,
-        required: [true, "Please provide a Ekart Destination data"],
     },
-    shipmentItemDetail:{
+    cancelResarray:{
         type: Array,
-        required: [true, "Please provide a Ekart Shipment data"],
-    },
-    requestID:{
-        type: String,
-    },
-    trackingID:{
-        type: String,
-    },
-    status:{
-        type: String,
     }
 
 })

@@ -2,11 +2,10 @@ import EkartShip from '@/models/ekartShipment';
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
 
-export async function GET(req:NextRequest){
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
     try {
         await connect();
-        const data = await EkartShip.find();
-
+        const data = await EkartShip.findById(params.id);
         if(!data){
             return NextResponse.json({
                 status: 400,

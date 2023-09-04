@@ -1,31 +1,34 @@
 import EkartShip from '@/models/ekartShipment';
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
-import fetch from 'node-fetch';
+import { EkartCreateResonse } from '@/interface/interface';
 
-interface EkartCreateResonse {
-    tracking_id: string;
-    shipment_payment_link: string;
-    status: string;
-    status_code: number;
-    is_parked: string;
-}
-
-interface EkartCreateShipRes {
-    response: EkartCreateResonse[];
-    request_id: string;
-    unauthorised?: string;
-}
-
-export async function POST(req: NextRequest) {
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
     try {
         await connect();
+        console.log(params.id)
+        const res = await req.json();
+        console.log(res)
+        const data = await EkartShip.findById(params.id)
+        const prevDataStatus = data.resultarray[0].response[0].status;
+        console.log(data.resultarray[0].response[0].status)
 
-        const data = await req.json();
         const authorizationHeader = req.headers.get('authorization');
+        const prevResponseData = data.resultarray[0]
+        const cancelData = {
+            request_id: prevResponseData.prevResponseData,
+            request_details: [
+                {
+                    tracking_id: prevResponseData.response[0].tracking_id,
+                    reason: res
+                }
+            ]
+        }
 
-        const apifetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/shipments/create`, {
-            method: 'POST',
+
+
+        const apifetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/shipments/rto/create`, {
+            method: 'PUT',
             headers: {
                 'Access-Control-Allow-Origin': `${process.env.NEXT_PUBLIC_ALLOW_ORIGIN}`,
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization, HTTP_X_MERCHANT_CODE',
@@ -33,19 +36,19 @@ export async function POST(req: NextRequest) {
                 'Content-Type': 'application/json',
                 'HTTP_X_MERCHANT_CODE': 'SPL',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(cancelData)
         });
-        const responseData = await apifetch.json() as EkartCreateShipRes;
-        console.log(apifetch.status, responseData);
-
+        const responseData = await apifetch.json();
+        console.log(responseData);
 
 
         if (apifetch.status === 200) {
-            const newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData })
-            const savEkartShipData = await newEkartShipData.save();
+            const updateData = await EkartShip.findByIdAndUpdate(params.id, {
+                $set: { cancelarray: [cancelData],cancelResarray: [responseData]}
+            })
             return NextResponse.json({
                 status: 200,
-                message: 'Ekart Shipment Created successfully',
+                message: 'Shipment Cancel',
                 success: true,
                 result: responseData,
             }, { status: 200 })
@@ -79,6 +82,7 @@ export async function POST(req: NextRequest) {
             }, { status: 500 })
         }
 
+
     } catch (error) {
         console.log(error)
         return NextResponse.json({
@@ -86,4 +90,5 @@ export async function POST(req: NextRequest) {
             message: 'Somthing went wrong ' + error,
         }, { status: 500 })
     }
+
 }

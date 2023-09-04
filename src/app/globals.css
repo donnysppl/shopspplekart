@@ -15,6 +15,9 @@
   a {
     @apply text-blue-600 underline;
   }
+  img {
+    @apply inline-block;
+  }
 }
 
 :root {
@@ -39,7 +42,10 @@ body {
   @apply leading-7 text-sm text-gray-400 ;
 }
 .form-inp{
-  @apply  w-full bg-transparent rounded border border-gray-600 text-base outline-none py-1.5 px-3 leading-8 transition-colors duration-200 ease-in-out text-gray-100 hover:border-purple-400 focus:border-purple-400;
+  @apply  w-full bg-transparent rounded border border-gray-600 text-base outline-none py-1.5 px-3 leading-8 transition-colors duration-200 ease-in-out text-gray-100 hover:border-purple-400 focus:border-purple-400 h-[45px];
+}
+select.form-inp option{
+  @apply bg-gray-900;
 }
 .btn-main{
   @apply bg-purple-800 py-2 px-5 rounded-md hover:bg-purple-700;
@@ -134,4 +140,142 @@ body {
   100% {
      transform: rotate(1turn);
   }
+}
+
+/* custom pagination */
+.pagenation-contain{
+  @apply flex items-center justify-center mt-2; 
+}
+.pagination-item{
+  @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-300 border border-gray-500 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 decoration-transparent hover:text-gray-800 cursor-pointer;
+}
+
+/* lable */
+.lable{
+  width: 800px;
+  height: 800px;
+  background-color: #ffffff;
+  padding: 15px;
+  overflow: hidden;
+}
+.lable-outer{
+  width: 100%;
+  height: 100%;
+  border: 4px dashed #000000;
+}
+.label-w-80{
+  width: 85%;
+  border: 2px solid #5a5a5abd;
+  min-height: 100%;
+  margin: 0 auto;
+  float: left;
+}
+.label-w-20{
+  width: 15%;
+  margin: 0 auto;
+  float: left;
+}
+.label-prepard-part{
+  background-color: #ddd;
+  padding: 0 10px 0 10px;
+  display: flex;
+    align-items: center;
+  width: 100%;
+  height: 35px;
+}
+.lable-head-text{
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #000;
+  line-height: 1.5;
+  font-family: 'Inter', sans-serif;
+}
+.pad-10{
+  padding: 5px 10px;
+}
+.padlr-10{
+  padding: 0 10px;
+}
+.label-w50{
+  width: 50%;
+  margin: 0 auto;
+  float: left;
+  height: 100%;
+}
+
+.label-w50:not(:last-child){
+  border-right: 1px solid #ddd;
+}
+
+.label-text-part{
+  color: #000;
+  font-size: 15px;
+  line-height: 150%;
+}
+
+.label-bar-code-outer{
+  padding: 20px;
+}
+.label-bar-code-inner{
+  background-color: #000;
+  width: 100%;
+  min-height: 300px;
+}
+
+.label-barline-code-outer{
+  padding: 10px;
+  position: relative;
+  height: 350px;
+}
+.label-barline-code-inner{
+  width: 100%;
+  min-height: 50px;
+}
+.label-barline-code-inner.vertical{
+  transform-origin: center;
+  transform: rotate(270deg);
+  position: absolute;
+  bottom: 10%;
+}
+.label-table-part table{
+  width: 100%;
+}
+.label-table-part table tr td, .label-table-part table tr th{
+  color: #000;
+  border: 2px solid #000000;
+}
+.label-handover-part span{
+  background-color: #000;
+  line-height: 100%;
+  font-weight: 700;
+  font-size: 16px;
+  padding: 2px 2px;
+}
+.lable-partition {
+  width: 100%;
+  height: 340px;
+}
+.label-sold-part, .label-gst-part {
+  width: 100%;
+  border-top: 2px solid #5a5a5abd;
+}
+.label-gst-part{
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+.label-table-part{
+  border-top: 2px solid #5a5a5abd;
+  margin-top: 4px;
+  padding: 4px;
+}
+.label-small-part {
+  width: 100%;
+  height: 150px;
+  border-top: 2px solid #5a5a5abd;
+  padding: 4px;
+}
+.label-table-part table tr td {
+  font-size: 14px;
+  padding: 5px;
 }

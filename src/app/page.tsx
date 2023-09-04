@@ -14,7 +14,6 @@ export default function Home() {
   }
 
   const router = useRouter();
-  console.log(router)
 
   const [showPass, setshowPass] = useState(false);
   const [loader, setloader] = useState(false);
@@ -36,7 +35,12 @@ export default function Home() {
         console.log(res);
         if (res.status === 200) {
           toast.success(res.message);
+          localStorage.setItem('token', res.bearerToken);
           router.push("/dashboard");
+          setloader(false);
+        }
+        else if (res.status === 401) {
+          toast.error(res.message);
           setloader(false);
         }
         else if (res.status === 400) {

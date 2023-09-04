@@ -9,16 +9,8 @@ const dashNavList = [
         navhead: "Ekart Shipment",
         navlink: [
             {
-                innernavname: "Create Shipment",
-                innernavlink: "/dashboard/create-shipment"
-            },
-            {
                 innernavname: "List Shipment",
                 innernavlink: "/dashboard/list-shipment"
-            },
-            {
-                innernavname: "Reverse",
-                innernavlink: "/dashboard/reverse"
             },
             {
                 innernavname: "Track Shipment",
