@@ -173,7 +173,7 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
 
         woocomPerData();
 
-    }, [])
+    }, [params.id])
 
 
     const oncreateShipment = async (e: React.FormEvent<HTMLFormElement>) => {

@@ -90,7 +90,7 @@ export default function Dashboard() {
                                         {
                                             wooComOrderData && wooComOrderData.map((item, index) => {
                                                 return (
-                                                    <tr className="border-b border-gray-500 hover:bg-gray-800">
+                                                    <tr key={index} className="border-b border-gray-500 hover:bg-gray-800">
                                                         <td className="px-6 py-4">
                                                             {'# ' + item.id + ' ' + item.billing.first_name + ' ' + item.billing.last_name}
                                                         </td>

@@ -45,7 +45,7 @@ export default function PerListShipment({ params }: { params: { id: string } }) 
                 })
         }
         perShipDetail();
-    }, [])
+    }, [params.id])
 
     return (
         <div className='container p-8'>

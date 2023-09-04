@@ -145,7 +145,7 @@ export default function ShipmentForm({ id, data, loading }: ParamsTypeShipForm) 
     if(data){
       setloader(false);
     }
-  }, [])
+  }, [data])
 
   const onSameReturnAdd = () => {
     if (!sameAddressCheck) {
