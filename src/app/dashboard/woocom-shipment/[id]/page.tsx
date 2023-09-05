@@ -380,12 +380,12 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
             <div className="border border-gray-500 p-8 rounded-2xl">
                 <h2 className="text-center">Create Shipment Woocommerce Product </h2>
                 <div className="text-center">Order ID : SP{params.id}PL</div>
-                <div>
+                {/* <div>
                     - Source / Return PIN code: 400066
                     - Destination PIN code: 848125
                     Invoice No.MH/228/2023-24
 
-                </div>
+                </div> */}
 
 
                 <div className={`relative ${loader ? "w-full h-[500px]" : null}`}>
@@ -409,8 +409,8 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
                                                 value={'' || sourceLocationCode} /> */}
                                             <select className="form-inp" placeholder="Source Location Code"
                                                 onChange={(e) => setSourceLocationCode(e.target.value)}
-                                                value={'' || sourceLocationCode} >
-                                                <option selected>Select The Location</option>
+                                                value={sourceLocationCode} defaultValue={"DEFAULT"} >
+                                                <option value="DEFAULT" selected>Select The Location</option>
                                                 <option value="SPL_BLR_01">Bengaluru / SPL_BLR_01</option>
                                                 <option value="SPL_HYD_02">Hyderabad / SPL_HYD_02</option>
                                                 <option value="SPL_THA_03">Thane(Maharashtra) / SPL_THA_03</option>
