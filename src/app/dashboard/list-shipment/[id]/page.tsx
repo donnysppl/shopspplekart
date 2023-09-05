@@ -15,6 +15,7 @@ export default function PerListShipment({ params }: { params: { id: string } }) 
     const [shipmentItems, setshipmentItems] = useState<ShipmentItem>();
     const [trackingDetails, settrackingDetails] = useState<Response>();
     const [sourceDetails, setsourceDetails] = useState<SourceData>();
+    
 
     useEffect(() => {
         const perShipDetail = async () => {
@@ -50,7 +51,7 @@ export default function PerListShipment({ params }: { params: { id: string } }) 
     return (
         <div className='container p-8'>
             <div className="mx-auto p-5">
-                <h2 className='text-center'>Shipment Details : {params.id}</h2>
+                <h2 className='text-center'>Shipment Details</h2>
 
                 <div className="per-ship-data flex gap-5 mt-5 flex-wrap">
                     <div className=" border border-gray-500 p-5 rounded-xl w-[48%]">

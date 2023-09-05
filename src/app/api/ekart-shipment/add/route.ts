@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
         if (apifetch.status === 200) {
             const newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData })
-            const savEkartShipData = await newEkartShipData.save();
+            await newEkartShipData.save();
             return NextResponse.json({
                 status: 200,
                 message: 'Ekart Shipment Created successfully',

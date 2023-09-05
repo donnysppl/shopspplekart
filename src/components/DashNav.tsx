@@ -9,6 +9,10 @@ const dashNavList = [
         navhead: "Ekart Shipment",
         navlink: [
             {
+                innernavname: "Dashboard",
+                innernavlink: "/dashboard"
+            },
+            {
                 innernavname: "List Shipment",
                 innernavlink: "/dashboard/list-shipment"
             },

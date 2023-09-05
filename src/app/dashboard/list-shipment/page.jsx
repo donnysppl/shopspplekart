@@ -50,10 +50,6 @@ export default function ListShipment() {
             accessorFn: (row, index) => row.resultarray[0].response[0].tracking_id ? row.resultarray[0].response[0].tracking_id : '',
         },
         {
-            header: 'Status',
-            accessorFn: (row, index) => row.resultarray[0].response[0].status,
-        },
-        {
             header: 'Order Id',
             accessorFn: (row, index) => row.ekartarray[0].services[0].service_details[0].shipment.shipment_items[0].item_attributes[0].value,
         },
