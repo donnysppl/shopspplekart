@@ -156,11 +156,11 @@ export default function TrackShipment() {
           const shipment = res.responseData[shipmentKey];
           settrackResponse(shipment);
           const data = shipment.history;
-          if(data.length){
+          if (data.length) {
             data.forEach((item: any) => {
               item.event_date = new Date(item.event_date);
             });
-  
+
             data.sort((a: any, b: any) => a.event_date - b.event_date);
             settrackingresHis(data.reverse());
           }
@@ -222,36 +222,16 @@ export default function TrackShipment() {
               {
                 loading ? <div className='w-full h-[500px]'><Loader /></div> : null
               }
-              {
-                trackingresHis.length ?
-                  <div className='border-t border-gray-700 pt-5'>
-                    <h5 className='mb-3'>Processing on March 24, 2021</h5>
-
-                    <div className="bg-full-range w-full h-1.5 rounded-xl bg-slate-800">
-                      <div className={`inner-range h-1.5 rounded-xl bg-purple-400 
-                      ${(trackingresHis[0].status === 'shipment_delivered') ? 'w-[100%]' :
-                          (trackingresHis[0].status === 'shipment_out_for_delivery') ? 'w-[75%]' :
-                            (trackingresHis[0].status === 'received_at_dh') ? 'w-[70%]' :
-                              (trackingresHis[0].status === 'received') ? 'w-[65%]' :
-                                (trackingresHis[0].status === 'shipment_pickup_complete') ? 'w-[65%]' :
-                                  (trackingresHis[0].status === 'pickup_out_for_pickup') ? 'w-[50%]' :
-                                    (trackingresHis[0].status === 'pickup_reattempt') ? 'w-[50%]' : 'w-[25%]'} `}></div>
-                    </div>
-
-                    <div className="range-text-part mt-4">
-                      <div className="range-inner-text grid grid-cols-4">
-                        <h6 className='text-center'>Order placed</h6>
-                        <h6 className='text-center'>Processing</h6>
-                        <h6 className='text-center'>Shipped</h6>
-                        <h6 className='text-center'>Delivered</h6>
-                      </div>
-                    </div>
+              <div className='border-t border-gray-700 pt-5'>
 
 
+                <div className="see-details-part mt-8">
+                  {
+                    (trackingresHis?.length) ?
+                      <>
+                        <h5 className='mb-3'>Expected Date : {trackResponse?.expected_delivery_date} </h5>
 
-                    <div className="see-details-part mt-8">
-                      {
-                        trackingresHis && trackingresHis.map((item, index) => {
+                        {trackingresHis?.map((item, index) => {
                           return (
                             <div key={index} className='border-l border-gray-500 p-3 ps-5 see-details-item'>
                               <div>{item.description} <span className='text-gray-500 text-sm'>{moment(item.event_date).format('MMMM Do YYYY, h:mm:ss a')}</span></div>
@@ -259,13 +239,17 @@ export default function TrackShipment() {
                               <div className='text-gray-500 text-sm'>Hub Name : {item.hub_name}</div>
                             </div>
                           )
-                        })
-                      }
-                    </div>
+                        })}
+                      </>
+                      : <>
+                       
+                        <div className='text-center'>Data Is Empty or Not Found. Please Retry</div>
+                      </>
+                  }
 
-                  </div>
-                  : <div className='text-center'>Data Is Empty or Not Found. Please Retry</div>
-              }
+                </div>
+
+              </div>
             </div>
 
 
