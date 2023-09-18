@@ -74,7 +74,7 @@ export default function CommonTable({ data, columns, loading }) {
           {table.getRowModel().rows.map(row => (
             <tr className="border-b border-gray-500 hover:bg-gray-800" key={row.id}>
               {row.getVisibleCells().map(cell => (
-                <td className="px-6 py-4" key={cell.id}>
+                <td className="px-6 py-4 text-sm" key={cell.id}>
                   {flexRender(
                     cell.column.columnDef.cell,
                     cell.getContext()

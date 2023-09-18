@@ -137,6 +137,7 @@ export default function TrackShipment() {
   const onShipTrack = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setloading(true);
+    settrackingresHis([]);
     const token = localStorage.getItem('token');
 
     await fetch('/api/ekart-shipment/track', {

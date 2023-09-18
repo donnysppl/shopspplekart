@@ -20,7 +20,9 @@ export default function ListShipment() {
                     if (res.status === 200) {
                         toast.success(res.message);
                         const data = res.result;
-                        const dataRev = data.reverse();
+                        const dataFilter = data.filter((item) => item.resultarray[0].response[0].status === 
+                        "REQUEST_RECEIVED")
+                        const dataRev = dataFilter.reverse();
                         setlistdata(dataRev);
                     }
                     else if (res.status === 400) {
@@ -56,6 +58,10 @@ export default function ListShipment() {
         {
             header: 'Customer Name',
             accessorFn: (row, index) => row.ekartarray[0].services[0].service_details[0].service_data.destination.address.first_name,
+        },
+        {
+            header: 'Request Status',
+            accessorFn: (row, index) => row.resultarray[0].response[0].status,
         },
         {
             header: 'Action',

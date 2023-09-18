@@ -47,7 +47,7 @@ export default function Label({ custDetail, shipDetail, trackDetail, sourceDetai
         <>
             <div className="btn flex gap-5 my-5">
                 
-                <button className='btn-main' onClick={(e) => setshowLabel(!showLabel)}>Show Label</button>
+                <button className='btn-main' onClick={(e) => setshowLabel(!showLabel)}>{showLabel ? 'Hide' : 'Show'} Label</button>
                 {
                     showLabel ? <button className='btn-main' onClick={createPDF}>Download Label</button> : null
                 }
