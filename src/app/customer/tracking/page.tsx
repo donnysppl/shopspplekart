@@ -29,6 +29,7 @@ export default function CustomerTracking() {
         settrackingresHis([])
         await fetch('/api/customer/track', {
             method: 'POST',
+            cache: 'no-store',
             headers: {
                 "Content-Type": "application/json",
                 "HTTP_X_MERCHANT_CODE": "SPL",

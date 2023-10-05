@@ -73,6 +73,8 @@ export default function PerListShipment({ params }: { params: { id: string } }) 
         const perShipDetail = async () => {
             await fetch(`/api/ekart-shipment/list/${params.id}`, {
                 method: 'GET',
+            cache: 'no-store',
+
             }).then(res => res.json())
                 .then(res => {
                     console.log(res.result);
