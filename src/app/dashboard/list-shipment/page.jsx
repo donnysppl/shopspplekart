@@ -14,6 +14,10 @@ export default function ListShipment() {
         const listShipData = async () => {
             await fetch('/api/ekart-shipment/list', {
                 method: 'GET',
+                headers:{
+                    'Cache-Control':'public, max-age=60',
+                    "Content-Type": "application/json",
+                }
             }).then(res => res.json())
                 .then(res => {
                     console.log(res);

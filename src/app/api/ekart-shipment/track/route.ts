@@ -1,12 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import fetch from 'node-fetch';
-import type { NextApiResponse } from 'next';
- 
-type ResponseData = {
-  message: string
-}
-export async function POST(req: NextRequest,res: NextApiResponse<ResponseData>){
-    res.setHeader('Cache-Control', 'public, max-age=60')
+
+export async function POST(req: NextRequest) {
     try {
 
         const data = await req.json();
