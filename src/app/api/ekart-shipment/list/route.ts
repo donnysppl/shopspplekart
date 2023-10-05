@@ -1,8 +1,14 @@
 import EkartShip from '@/models/ekartShipment';
 import { NextRequest, NextResponse } from "next/server";
 import { connect } from "@/dbConfig/dbConfig";
+import type { NextApiRequest, NextApiResponse } from 'next';
+ 
+type ResponseData = {
+  message: string
+}
 
-export async function GET(req:NextRequest){
+export async function GET(req:NextRequest,res: NextApiResponse<ResponseData>){
+    res.setHeader('Cache-Control', 'public, max-age=60')
     try {
         await connect();
         const data = await EkartShip.find();

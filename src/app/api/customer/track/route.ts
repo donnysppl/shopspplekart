@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-
+import type { NextApiResponse } from 'next';
+ 
+type ResponseData = {
+  message: string
+}
 interface ApiResponse {
     Authorization: string;
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest,res: NextApiResponse<ResponseData>){
+    res.setHeader('Cache-Control', 'public, max-age=60')
     try {
         const { phone, trackingid } = await req.json();
         const phoneLen = phone.length;
