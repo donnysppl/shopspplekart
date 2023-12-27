@@ -37,7 +37,7 @@ export default function CustomerTracking() {
             body: JSON.stringify(custTrackInp)
         }).then(res => res.json())
             .then(res => {
-                console.log(res);
+                // console.log(res);
                 if (res.status === 200) {
                     const shipmentKey = Object.keys(res.responseData)[0];
                     const shipment = res.responseData[shipmentKey];

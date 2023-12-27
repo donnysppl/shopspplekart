@@ -32,7 +32,7 @@ export default function Home() {
       headers: { 'Content-Type': 'application/json' },
     }).then(res => res.json())
       .then(res => {
-        console.log(res);
+        // console.log(res);
         if (res.status === 200) {
           toast.success(res.message);
           localStorage.setItem('token', res.bearerToken);
@@ -64,10 +64,10 @@ export default function Home() {
       <section>
         <div className="container mx-auto flex justify-center items-center">
 
-          <div className="w-full md:w-2/4 lg:w-1/3 h-screen p-6">
-            <div className="border border-gray-700 w-full h-full rounded-2xl">
+          <div className="w-full md:w-3/5 lg:w-2/5 h-screen p-6 flex items-center">
+            <div className="border border-gray-700 w-full rounded-2xl py-5" >
 
-              <div className="login-form-part flex flex-col justify-center h-full p-6 relative overflow-hidden">
+              <div className="login-form-part flex flex-col justify-center p-6 relative overflow-hidden">
                 {
                   loader ? <Loader/> : null
                 }

@@ -8,8 +8,8 @@ import Link from 'next/link';
 
 const WooCommerce = new WooCommerceRestApi({
     url: "https://shopsppl.in",
-    consumerKey: "ck_362c79346df5045a8354633e29ca4433364baa75",
-    consumerSecret: "cs_7efa0e005bd7816f0f80708a2aad8c4aaddfde46",
+    consumerKey: "ck_2c787e464058ab73b1dc9620ee682c8684692b2f",
+    consumerSecret: "cs_a454b91f6a0a34069386868f5ee1919ea48b5529",
     version: "wc/v3"
 });
 
