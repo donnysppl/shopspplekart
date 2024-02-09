@@ -36,6 +36,7 @@ export async function POST(req: NextRequest) {
             if (loginFetch.status === 200) {
                 const apifetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/shipments/track`, {
                     method: 'POST',
+                    cache:'no-cache',
                     headers: {
                         'Access-Control-Allow-Origin': `${process.env.NEXT_PUBLIC_ALLOW_ORIGIN}`,
                         'Access-Control-Allow-Headers': 'Content-Type, Authorization, HTTP_X_MERCHANT_CODE',

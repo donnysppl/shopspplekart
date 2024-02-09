@@ -1,10 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 // import ShipmentForm from "@/components/forms/ShipmentForm";
 import {
-    WoocomOrder, ProductWoocom,
     SourceData,
     DestinationData,
     ShipmentItemDetail,
@@ -13,6 +11,8 @@ import {
 import Loader from "@/components/Loader";
 import Swal from 'sweetalert2';
 import Unauthorized from "@/helper/Unauthorize";
+import toast from "react-hot-toast";
+import { lattestTrackingid } from "@/helper/lattestTrackingid";
 
 type ParamsType = {
     id: string,
@@ -21,19 +21,13 @@ type ParamsType = {
 
 // - Source / Return PIN code: 400066
 // - Destination PIN code: 848125
-const WooCommerce = new WooCommerceRestApi({
-    url: "https://shopsppl.in",
-    consumerKey: "ck_362c79346df5045a8354633e29ca4433364baa75",
-    consumerSecret: "cs_7efa0e005bd7816f0f80708a2aad8c4aaddfde46",
-    version: "wc/v3"
-});
-
 export default function WoocomShip({ params }: { params: ParamsType }) {
 
-    const [woocomPerOrderData, setwoocomPerOrderData] = useState([]);
     const [loader, setloader] = useState(true);
-    const [woocomProdId, setwoocomProdId] = useState();
-    const [wooProductFilt, setwooProductFilt] = useState<ProductWoocom>()
+
+    const [lattestTrackId, setlattestTrackId] = useState('');
+
+    const [addSourdata, setaddSourdata] = useState<boolean>(false);
 
     const [sourceData, setSourceData] = useState<SourceData>({
         first_name: "",
@@ -96,82 +90,87 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
     });
 
 
+
+
     useEffect(() => {
-
-        const woocomPerData = async () => {
-            setloader(true);
-            WooCommerce.get(`orders/${params.id}`)
-                .then((response) => {
-                    console.log(response.data);
-                    if (response.status === 200) {
-                        setwoocomPerOrderData(response.data);
-                        dataValueInp(response.data);
-                        wooComOrderProd(response.data.line_items[0].product_id)
+        setloader(true);
+        const orderListFetch = async () => {
+            await fetch(`${process.env.NEXT_PUBLIC_ORDER_LINK}/api/ekartcon/orderlist/${params.id}`, {
+                method: 'GET',
+                cache: 'no-store',
+            }).then(res => res.json())
+                .then(res => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        toast.success(res.message);
+                        dataValueInp(res.result.orderData);
+                        dataValuInpPro(res.result.prodData);
+                        // setorderListData(res.result);
                     }
+                    else if (res.status === 400) {
+                        toast.error(res.message);
+                    }
+                    else if (res.status === 500) {
+                        toast.error(res.message);
+                    }
+                    setloader(false);
                 })
-                .catch((error) => {
-                    console.log(error.response.data);
-                });
+                .catch(err => {
+                    console.log(err);
+                })
+
+            const lattrackId = await lattestTrackingid();
+            setlattestTrackId(lattrackId)
         }
 
-        const wooComOrderProd = async (id: number) => {
-            WooCommerce.get(`products/${id}`)
-                .then((response) => {
-                    console.log(response.data)
-                    if (response.status === 200) {
-                        setwooProductFilt(response.data);
-                        dataValuInpPro(response.data);
-                    }
-                })
-                .catch((error) => {
-                    console.log(error.response.data);
-                });
-        }
-
-        const dataValueInp = (data: WoocomOrder) => {
+        const dataValueInp = (data: any) => {
+            // console.log( data)
             setDestinationData({
-                first_name: data.billing.first_name + data.billing.last_name,
-                address_line1: data.billing.address_1,
-                address_line2: data.billing.address_2,
-                pincode: data.billing.postcode,
-                city: data.billing.city,
-                state: data.billing.state,
-                primary_contact_number: data.billing.phone,
+                first_name: data.name,
+                address_line1: data.address,
+                address_line2: data.address,
+                pincode: data.pincode,
+                city: data.city,
+                state: data.state,
+                primary_contact_number: data.phone,
                 landmark: '',
-                email_id: data.billing.email,
+                email_id: data.email,
                 alternate_contact_number: ''
             });
-            if (data && data.line_items && data.line_items[0]) {
+            if (data.orderprod[0]) {
 
                 setShipmentItemDetail((shipmentItemDetail) => ({
                     ...shipmentItemDetail,
-                    product_id: data.line_items[0].sku,
-                    product_title: data.line_items[0].name,
-                    total_sale_value: parseInt(data.line_items[0].total),
+                    product_id: data.orderprod[0].productmodel,
+                    product_title: data.orderprod[0].productname,
+                    total_sale_value: parseInt(data.orderprod[0].productsaleprice),
                     quantity: 1,
-                    order_id: `SP${data.id}PL`,
-                    value: parseInt(data.line_items[0].total),
+                    order_id: data.sppl_orderid,
+                    value: parseInt(data.orderprod[0].productsaleprice),
                 }))
             }
         }
+        const dataValuInpPro = (data: any) => {
 
-        const dataValuInpPro = (data: ProductWoocom) => {
+            const category = data.category.toString();
             setShipmentItemDetail((shipmentItemDetail) => ({
                 ...shipmentItemDetail,
-                category: data.categories[0].name,
-                brand_name: data.etheme_brands[0].name,
-                item_dimensions: `${data.dimensions.length}:${data.dimensions.width}:${data.dimensions.height}:${data.weight}`,
+                category: category,
+                brand_name: data.brand,
+                item_dimensions: `${data.lenght}:${data.width}:${data.height}:${data.weight}`,
             }))
             setShipmentDimension({
-                length: parseInt(data.dimensions.length),
-                height: parseInt(data.dimensions.height),
+                length: parseInt(data.lenght),
+                height: parseInt(data.height),
                 weight: parseInt(data.weight),
-                breadth: parseInt(data.dimensions.width),
+                breadth: parseInt(data.width),
             })
             setloader(false);
         }
 
-        woocomPerData();
+
+
+        orderListFetch();
 
     }, [params.id])
 
@@ -180,6 +179,26 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
         e.preventDefault();
 
         const token = localStorage.getItem('token');
+
+        const sourceDataCond: any = {};
+
+        if (addSourdata === true) {
+            sourceDataCond.address = {
+                first_name: sourceData.first_name,
+                address_line1: sourceData.address_line1,
+                address_line2: sourceData.address_line2,
+                pincode: sourceData.pincode,
+                city: sourceData.city,
+                state: sourceData.state,
+                primary_contact_number: sourceData.primary_contact_number,
+                landmark: sourceData.landmark,
+                email_id: sourceData.email_id
+            }
+        }
+        else {
+            sourceDataCond.location_code = sourceLocationCode
+        }
+
 
         const data = {
             client_name: 'SPL',
@@ -193,20 +212,7 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
                                 vendor_name: 'EKART',
                                 amount_to_collect: 0,
                                 delivery_type: "LARGE",
-                                source: {
-                                    location_code: sourceLocationCode,
-                                    // address: {
-                                    //     first_name: sourceData.first_name,
-                                    //     address_line1: sourceData.address_line1,
-                                    //     address_line2: sourceData.address_line2,
-                                    //     pincode: sourceData.pincode,
-                                    //     city: sourceData.city,
-                                    //     state: sourceData.state,
-                                    //     primary_contact_number: sourceData.primary_contact_number,
-                                    //     landmark: sourceData.landmark,
-                                    //     email_id: sourceData.email_id
-                                    // }
-                                },
+                                source: sourceDataCond,
                                 destination: {
                                     address: {
                                         first_name: destinationData.first_name,
@@ -221,20 +227,7 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
                                         alternate_contact_number: destinationData.alternate_contact_number
                                     }
                                 },
-                                return_location: {
-                                    location_code: sourceLocationCode,
-                                    // address: {
-                                    //     first_name: sourceData.first_name,
-                                    //     address_line1: sourceData.address_line1,
-                                    //     address_line2: sourceData.address_line2,
-                                    //     pincode: sourceData.pincode,
-                                    //     city: sourceData.city,
-                                    //     state: sourceData.state,
-                                    //     primary_contact_number: sourceData.primary_contact_number,
-                                    //     landmark: sourceData.landmark,
-                                    //     email_id: sourceData.email_id
-                                    // }
-                                }
+                                return_location: sourceDataCond
                             },
                             shipment: {
                                 client_reference_id: shipmentItemDetail.tracking_id,
@@ -322,8 +315,9 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
 
         console.log(data)
 
-        await fetch('/api/ekart-shipment/add', {
+        await fetch(`/api/ekart-shipment/add?order=${params.id}`, {
             method: 'POST',
+            cache:'no-cache',
             headers: {
                 "Content-Type": "application/json",
                 "HTTP_X_MERCHANT_CODE": "SPL",
@@ -375,10 +369,11 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
 
     };
 
+
     return (
         <div className="container mx-auto p-8">
             <div className="border border-gray-500 p-8 rounded-2xl">
-                <h2 className="text-center">Create Shipment Woocommerce Product </h2>
+                <h2 className="text-center">Create Shipment </h2>
                 <div className="text-center">Order ID : SP{params.id}PL</div>
                 {/* <div>
                     - Source / Return PIN code: 400066
@@ -394,85 +389,102 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
 
                             <form onSubmit={oncreateShipment}>
 
-
-
                                 <div className="form-partition">
                                     <div className="form-partition-heading">
                                         <div className="uppercase font-semibold text-lg pt-5">Source Address </div>
                                     </div>
 
-                                    <div className="form-inp-part">
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="sourceLocationCode" className="form-label ">Source Location Code</label>
-                                            {/* <input type="text" name="sourceLocationCode" className="form-inp" placeholder="Source Location Code"
-                                                onChange={(e) => setSourceLocationCode(e.target.value)}
-                                                value={'' || sourceLocationCode} /> */}
-                                            <select className="form-inp" placeholder="Source Location Code"
-                                                onChange={(e) => setSourceLocationCode(e.target.value)}
-                                                value={sourceLocationCode} defaultValue={"DEFAULT"} >
-                                                <option value="DEFAULT" selected>Select The Location</option>
-                                                <option value="SPL_BLR_01">Bengaluru / SPL_BLR_01</option>
-                                                <option value="SPL_HYD_02">Hyderabad / SPL_HYD_02</option>
-                                                <option value="SPL_THA_03">Thane(Maharashtra) / SPL_THA_03</option>
-                                                <option value="SPL_HOW_04">Kolkata / SPL_HOW_04</option>
-                                                <option value="SPL_NOI_05">Noida / SPL_NOI_05</option>
-                                            </select>
+                                    <div>
+                                        <div className="form-inp-part outer">
+                                            <div className="mb-4 form-outer-div">
+                                                <label htmlFor="sourceLocationCode" className="form-label ">Source Location Code</label>
+
+                                                <select className="form-inp" placeholder="Source Location Code"
+                                                    onChange={(e) => setSourceLocationCode(e.target.value)}
+                                                    value={sourceLocationCode} defaultValue={"DEFAULT"} >
+                                                    <option value="DEFAULT" selected>Select The Location</option>
+                                                    <option value="SPL_BLR_01">Bengaluru / SPL_BLR_01</option>
+                                                    <option value="SPL_HYD_02">Hyderabad / SPL_HYD_02</option>
+                                                    <option value="SPL_THA_03">Thane(Maharashtra) / SPL_THA_03</option>
+                                                    <option value="SPL_HOW_04">Kolkata / SPL_HOW_04</option>
+                                                    <option value="SPL_NOI_05">Noida / SPL_NOI_05</option>
+                                                </select>
+                                            </div>
+
+                                            <div className="mb-4 mt-3 form-outer-div checkbox-inline cursor-pointer ps-3 items-center">
+                                                <input className="form-inp-check" type="checkbox" name="addSourceAddress" id="addSourceAddress"
+                                                    onChange={(e) => setaddSourdata(!addSourdata)} />
+                                                <label className="form-label" htmlFor="addSourceAddress">
+                                                    Add Source Address
+                                                </label>
+                                            </div>
+
+
                                         </div>
-                                        {/* <div className="mb-4 form-outer-div">
-                                            <label htmlFor="first_name" className="form-label ">Name*</label>
-                                            <input type="text" name="first_name" className="form-inp" required placeholder="Name of the Seller"
-                                                onChange={(e) => setSourceData({ ...sourceData, first_name: e.target.value })}
-                                                value={'' || sourceData.first_name} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="address_line1" className="form-label ">Address Line 1*</label>
-                                            <input type="text" name="address_line1" className="form-inp" required placeholder="Address"
-                                                onChange={(e) => setSourceData({ ...sourceData, address_line1: e.target.value })}
-                                                value={'' || sourceData.address_line1} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="address_line2" className="form-label ">Address Line 2</label>
-                                            <input type="text" name="address_line2" className="form-inp" placeholder="Address"
-                                                onChange={(e) => setSourceData({ ...sourceData, address_line2: e.target.value })}
-                                                value={'' || sourceData.address_line2} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="pincode" className="form-label ">Pincode*</label>
-                                            <input type="text" name="pincode" className="form-inp" required placeholder="Pincode"
-                                                onChange={(e) => setSourceData({ ...sourceData, pincode: e.target.value })}
-                                                value={'' || sourceData.pincode} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="city" className="form-label ">City*</label>
-                                            <input type="text" name="city" className="form-inp" required placeholder="City"
-                                                onChange={(e) => setSourceData({ ...sourceData, city: e.target.value })}
-                                                value={'' || sourceData.city} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="state" className="form-label ">State*</label>
-                                            <input type="text" name="state" className="form-inp" required placeholder="State"
-                                                onChange={(e) => setSourceData({ ...sourceData, state: e.target.value })}
-                                                value={'' || sourceData.state} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="primary_contact_number" className="form-label ">Primary Contact Number*</label>
-                                            <input type="tel" name="primary_contact_number" className="form-inp" required placeholder="Primary Contact Number"
-                                                onChange={(e) => setSourceData({ ...sourceData, primary_contact_number: e.target.value })}
-                                                value={'' || sourceData.primary_contact_number} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="landmark" className="form-label ">Landmark</label>
-                                            <input type="text" name="landmark" className="form-inp" placeholder="Landmark"
-                                                onChange={(e) => setSourceData({ ...sourceData, landmark: e.target.value })}
-                                                value={'' || sourceData.landmark} />
-                                        </div>
-                                        <div className="mb-4 form-outer-div">
-                                            <label htmlFor="email_id" className="form-label ">Email ID</label>
-                                            <input type="email" name="email_id" className="form-inp" placeholder="Email ID"
-                                                onChange={(e) => setSourceData({ ...sourceData, email_id: e.target.value })}
-                                                value={'' || sourceData.email_id} />
-                                        </div> */}
+
+                                        {
+                                            addSourdata ?
+                                                <div className="form-inp-part outer">
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="first_name" className="form-label ">Name*</label>
+                                                        <input type="text" name="first_name" className="form-inp" required placeholder="Name of the Seller"
+                                                            onChange={(e) => setSourceData({ ...sourceData, first_name: e.target.value })}
+                                                            value={'' || sourceData.first_name} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="address_line1" className="form-label ">Address Line 1*</label>
+                                                        <input type="text" name="address_line1" className="form-inp" required placeholder="Address"
+                                                            onChange={(e) => setSourceData({ ...sourceData, address_line1: e.target.value })}
+                                                            value={'' || sourceData.address_line1} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="address_line2" className="form-label ">Address Line 2</label>
+                                                        <input type="text" name="address_line2" className="form-inp" placeholder="Address"
+                                                            onChange={(e) => setSourceData({ ...sourceData, address_line2: e.target.value })}
+                                                            value={'' || sourceData.address_line2} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="pincode" className="form-label ">Pincode*</label>
+                                                        <input type="text" name="pincode" className="form-inp" required placeholder="Pincode"
+                                                            onChange={(e) => setSourceData({ ...sourceData, pincode: e.target.value })}
+                                                            value={'' || sourceData.pincode} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="city" className="form-label ">City*</label>
+                                                        <input type="text" name="city" className="form-inp" required placeholder="City"
+                                                            onChange={(e) => setSourceData({ ...sourceData, city: e.target.value })}
+                                                            value={'' || sourceData.city} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="state" className="form-label ">State*</label>
+                                                        <input type="text" name="state" className="form-inp" required placeholder="State"
+                                                            onChange={(e) => setSourceData({ ...sourceData, state: e.target.value })}
+                                                            value={'' || sourceData.state} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="primary_contact_number" className="form-label ">Primary Contact Number*</label>
+                                                        <input type="tel" name="primary_contact_number" className="form-inp" required placeholder="Primary Contact Number"
+                                                            onChange={(e) => setSourceData({ ...sourceData, primary_contact_number: e.target.value })}
+                                                            value={'' || sourceData.primary_contact_number} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="landmark" className="form-label ">Landmark</label>
+                                                        <input type="text" name="landmark" className="form-inp" placeholder="Landmark"
+                                                            onChange={(e) => setSourceData({ ...sourceData, landmark: e.target.value })}
+                                                            value={'' || sourceData.landmark} />
+                                                    </div>
+                                                    <div className="mb-4 form-outer-div">
+                                                        <label htmlFor="email_id" className="form-label ">Email ID</label>
+                                                        <input type="email" name="email_id" className="form-inp" placeholder="Email ID"
+                                                            onChange={(e) => setSourceData({ ...sourceData, email_id: e.target.value })}
+                                                            value={'' || sourceData.email_id} />
+                                                    </div>
+                                                </div> : null
+                                        }
+
+
                                     </div>
+
 
                                 </div>
 
@@ -698,6 +710,7 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
                                             <input type="text" name="tracking_id" className="form-inp" placeholder="Tracking ID" required
                                                 onChange={(e) => setShipmentItemDetail({ ...shipmentItemDetail, tracking_id: e.target.value })}
                                                 value={'' || shipmentItemDetail.tracking_id} />
+                                            <div className="use text-sm text-gray-400">Use this : <strong>{lattestTrackId}</strong></div>
                                         </div>
 
                                         <div>
@@ -734,3 +747,4 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
         </div>
     )
 }
+

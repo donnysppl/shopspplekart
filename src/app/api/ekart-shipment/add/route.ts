@@ -17,9 +17,14 @@ interface EkartCreateShipRes {
     unauthorised?: string;
 }
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
     try {
         await connect();
+
+        const searchParams = req.nextUrl.searchParams;
+        const orderQuery = searchParams.get('order');
 
         const data = await req.json();
         const authorizationHeader = req.headers.get('authorization');
@@ -36,12 +41,11 @@ export async function POST(req: NextRequest) {
             body: JSON.stringify(data)
         });
         const responseData = await apifetch.json() as EkartCreateShipRes;
-        console.log(apifetch.status, responseData);
-
-
+        // console.dir(data.services[0].service_details[0].service_data);
+        console.log( apifetch, responseData)
 
         if (apifetch.status === 200) {
-            const newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData })
+            const newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData, trackingid: responseData.response[0].tracking_id , orderid:orderQuery })
             await newEkartShipData.save();
             return NextResponse.json({
                 status: 200,

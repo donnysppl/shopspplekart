@@ -142,6 +142,7 @@ export default function TrackShipment() {
 
     await fetch('/api/ekart-shipment/track', {
       method: 'POST',
+      cache:'no-cache',
       headers: {
         "Content-Type": "application/json",
         "HTTP_X_MERCHANT_CODE": "SPL",
