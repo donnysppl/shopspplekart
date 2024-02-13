@@ -9,7 +9,9 @@ export async function GET(req: NextRequest) {
                 'Access-Control-Allow-Origin': `${process.env.NEXT_PUBLIC_ALLOW_ORIGIN}`,
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Content-Type': 'application/json',
+                'Cache-Control': 'no-store',
             },
+
         });
         const responseData = await apifetch.json() as any;
 
