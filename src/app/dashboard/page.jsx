@@ -9,12 +9,10 @@ export default function Dashboard() {
     const [orderListData, setorderListData] = useState()
     const [loading, setloading] = useState(true);
 
-
-
     useEffect(() => {
         setloading(true);
         const orderListFetch = async () => {
-            await fetch(`${process.env.NEXT_PUBLIC_ORDER_LINK}/api/ekartcon/orderlist`, {
+            await fetch(`/api/orderdata`, {
                 method: 'GET',
                 cache: 'no-store',
             }).then(res => res.json())
@@ -22,7 +20,6 @@ export default function Dashboard() {
                     if (res.status === 200) {
                         toast.success(res.message);
                         const arrangeData = res.result.reverse();
-                        console.log(arrangeData)
                         setorderListData(arrangeData);
                     }
                     else if (res.status === 400) {
