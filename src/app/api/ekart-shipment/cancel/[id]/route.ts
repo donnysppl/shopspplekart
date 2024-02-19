@@ -39,7 +39,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
             body: JSON.stringify(cancelData)
         });
         const responseData = await apifetch.json();
-        console.log(responseData);
+        // console.log(responseData);
 
 
         if (apifetch.status === 200) {

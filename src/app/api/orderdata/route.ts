@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
             },
         })
         const responseData = await apifetch.json() as resp;
-        console.log(responseData);
+        // console.log(responseData);
         return NextResponse.json({
             status: 200,
             message: 'Success' , result: responseData.result
