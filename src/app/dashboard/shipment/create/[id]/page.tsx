@@ -95,9 +95,15 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
     useEffect(() => {
         setloader(true);
         const orderListFetch = async () => {
-            await fetch(`${process.env.NEXT_PUBLIC_ORDER_LINK}/api/ekartcon/orderlist/${params.id}`, {
+            await fetch(`/api/orderdata/${params.id}`, {
                 method: 'GET',
                 cache: 'no-store',
+                headers: {
+                    'Access-Control-Allow-Origin': `${process.env.NEXT_PUBLIC_ALLOW_ORIGIN}`,
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-store',
+                }
             }).then(res => res.json())
                 .then(res => {
                     console.log(res);
@@ -198,7 +204,6 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
         else {
             sourceDataCond.location_code = sourceLocationCode
         }
-
 
         const data = {
             client_name: 'SPL',
@@ -317,7 +322,7 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
 
         await fetch(`/api/ekart-shipment/add?order=${params.id}`, {
             method: 'POST',
-            cache:'no-cache',
+            cache: 'no-cache',
             headers: {
                 "Content-Type": "application/json",
                 "HTTP_X_MERCHANT_CODE": "SPL",
@@ -374,13 +379,8 @@ export default function WoocomShip({ params }: { params: ParamsType }) {
         <div className="container mx-auto p-8">
             <div className="border border-gray-500 p-8 rounded-2xl">
                 <h2 className="text-center">Create Shipment </h2>
-                <div className="text-center">Order ID : SP{params.id}PL</div>
-                {/* <div>
-                    - Source / Return PIN code: 400066
-                    - Destination PIN code: 848125
-                    Invoice No.MH/228/2023-24
+                <div className="text-center">Order ID : {shipmentItemDetail?.order_id}</div>
 
-                </div> */}
 
 
                 <div className={`relative ${loader ? "w-full h-[500px]" : null}`}>

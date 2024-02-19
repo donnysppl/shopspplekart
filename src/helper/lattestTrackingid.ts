@@ -6,14 +6,9 @@ export async function lattestTrackingid() {
         method: 'GET',
         cache: 'no-store',
     })
-
     const data = await trackingId.json();
     const numericalValue = parseInt(data.result.match(/\d+/)[0], 10);
-
     const incrementedValue = numericalValue + 1;
-
     const outpuString = data.result.replace(/\d+/, incrementedValue);
-    
-
     return outpuString;
 }
