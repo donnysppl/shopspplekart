@@ -6,7 +6,7 @@ interface resp{
     message:String,
     result:any
 }
-
+export const dynamic = 'force-dynamic';
 export async function GET(req: NextRequest) {
     try {
         const apifetch = await fetch(`${process.env.NEXT_PUBLIC_ORDER_LINK}/api/ekartcon/orderlist`, {
