@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { cookies } from 'next/headers'
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
@@ -7,6 +10,8 @@ export async function GET() {
             status: 200,
             success: true,
          },{status: 200,})
+
+         
          res.cookies.set("admin-token","",{
             httpOnly:true,
             expires: new Date(0)
@@ -15,6 +20,9 @@ export async function GET() {
             httpOnly:true,
             expires: new Date(0)
          });
+
+         cookies().delete('admin-token')
+         cookies().delete('barear-token')
          return res;
 
     } catch (error:any) {
