@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json({
                 status: 200,
-                message: 'Ekart Shipment Created successfully',
+                message: 'Ekart Shipment Created successfully ' + responseData.response[0].status,
                 success: true,
                 result: responseData,
             }, { status: 200 })
