@@ -65,7 +65,17 @@ export default function Dashboard() {
         },
         {
             header: 'Shipment Tracking',
-            accessorFn: (row, index) => row.shipmenttracking,
+            cell: cell => (
+                <div>
+                    {
+                        Array.isArray(cell.row.original.ekartData[0]) ? cell.row.original.ekartData[0].map((item, index) => (
+                            <span className="block" key={index}>{item.trackingid},</span>
+                        ))
+                            : cell.row.original.ekartData[0]?.trackingID
+                    }
+
+                </div>
+            )
         },
         {
             header: 'Action',
