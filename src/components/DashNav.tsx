@@ -23,6 +23,10 @@ const dashNavList = [
             {
                 innernavname: "Track Shipment",
                 innernavlink: "/dashboard/track-shipment"
+            },
+            {
+                innernavname: "Bulk Label",
+                innernavlink: "/dashboard/bulk-label"
             }
         ]
     }

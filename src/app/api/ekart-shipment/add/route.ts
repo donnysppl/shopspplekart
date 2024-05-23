@@ -48,14 +48,27 @@ export async function POST(req: NextRequest) {
 
         if (apifetch.status === 200) {
 
+            let newEkartShipData;
+
             if (orderQuery) {
-                const newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData, trackingid: responseData.response[0].tracking_id, orderid: orderQuery })
-                await newEkartShipData.save();
+                newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData, trackingid: responseData.response[0].tracking_id, orderid: orderQuery })
+
+                // order id : "65be1a7fcd5ad5a23f0c87f6"    
+                await fetch(`${process.env.NEXT_PUBLIC_ORDER_LINK}/api/ekartcon/orderlist/${orderQuery}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': `${process.env.NEXT_PUBLIC_ORDER_LINK}`,
+                        'Access-Control-Allow-Headers': 'Content-Type',
+                    },
+                    body: JSON.stringify(newEkartShipData),
+                });
             }
-            else{
-                const newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData, trackingid: responseData.response[0].tracking_id, orderid: newQuery })
-                await newEkartShipData.save();
+            else {
+                newEkartShipData = new EkartShip({ ekartarray: data, resultarray: responseData, trackingid: responseData.response[0].tracking_id, orderid: newQuery })
             }
+
+            await newEkartShipData.save();
 
             return NextResponse.json({
                 status: 200,

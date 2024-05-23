@@ -46,6 +46,34 @@ export default function ListShipment() {
         listShipData();
     }, [])
 
+
+
+    const onShipTrack = async (inpTrack) => {
+        const token = localStorage.getItem('token');
+
+        const fetchSattus = await fetch('/api/ekart-shipment/track', {
+            method: 'POST',
+            cache: 'no-cache',
+            headers: {
+                "Content-Type": "application/json",
+                "HTTP_X_MERCHANT_CODE": "SPL",
+                "Authorization": `${token}`
+            },
+            body: JSON.stringify({ "tracking_ids": [`${inpTrack}`] })
+        })
+
+        const fetchSattusJson = await fetchSattus.json();
+
+        if (fetchSattusJson.status === 200) {
+            const shipmentKey = Object.keys(fetchSattusJson.responseData)[0];
+            const shipment = fetchSattusJson.responseData[shipmentKey];
+            const data = shipment.history;
+            // console.log(data[0].status)
+
+            return data[0].status
+        }
+    }
+
     const data = useMemo(() => listdata, [listdata]);
 
     /** @type import('@tanstack/react-table').ColumnDef<any> */
@@ -87,7 +115,7 @@ export default function ListShipment() {
             <div className="border border-gray-500 p-8 rounded-2xl">
                 <h2 className="text-center">List Shipment</h2>
 
-                {data ? <CommonTable data={data} columns={columns} /> : null}
+                {data ? <CommonTable data={data} columns={columns} /> : 'loading....'}
             </div>
         </div>
     )

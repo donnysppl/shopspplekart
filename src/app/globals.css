@@ -315,3 +315,7 @@ select.form-inp option{
   border-radius: 50%;
   cursor: pointer;
 }
+
+.basic-multi-select {
+  color: #000 !important;
+}
