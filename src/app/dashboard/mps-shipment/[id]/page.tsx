@@ -15,7 +15,7 @@ export default async function MPSDetailLable({ params }: { params: { id: string 
     return (
         <div className='w-full mx-auto p-1.5'>
 
-            <MPSlable sourceData={sourceData} destiData={destiData} globalData={globalData} shipmentData={shipmentData} />
+            <MPSlable sourceData={sourceData} destiData={destiData} globalData={globalData} shipmentData={shipmentData} amount={fetchData?.amount_to_collect} />
 
         </div>
     )

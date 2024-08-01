@@ -72,7 +72,6 @@ export default function DashNav() {
             })
     }
 
-    console.log(pathName)
 
     return (
         <aside>

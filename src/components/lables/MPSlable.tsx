@@ -8,7 +8,7 @@ import { jsPDF } from "jspdf";
 import { useRef } from "react";
 import { BsDownload } from "react-icons/bs";
 
-export default function MPSlable({ sourceData, destiData, globalData, shipmentData }: ShipmentInfo) {
+export default function MPSlable({ sourceData, destiData, globalData, shipmentData,amount }: ShipmentInfo) {
 
     const labelRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -127,8 +127,10 @@ export default function MPSlable({ sourceData, destiData, globalData, shipmentDa
                                     <thead>
                                         <tr className='align-middle'>
                                             <th className='w-full'>
-                                                <div className='text-black font-semibold text-base text-left p-2'>
-                                                    PREPAID-DO NOT COLLECT CASH
+                                                <div className='text-black font-bold text-base text-left p-2'>
+                                                    {
+                                                        (amount !== 0) ? `CASH ON DELIVERY, COLLECT CASH ${priceFormat(amount)}` : 'PREPAID-DO NOT COLLECT CASH'
+                                                    }
                                                 </div>
                                             </th>
                                         </tr>

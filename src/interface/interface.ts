@@ -594,4 +594,5 @@ export interface ShipmentInfo {
   destiData: Address;
   globalData: GlobalData;
   shipmentData: ShipmentData[];
+  amount:number
 }
