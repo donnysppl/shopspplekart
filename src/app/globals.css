@@ -84,9 +84,11 @@ select.form-inp option{
 
 /* aside dashboard part */
 .dash-nav-list {
-  @apply block rounded-md px-3 py-2 text-sm font-medium text-gray-400
-   hover:text-gray-300  hover:bg-gray-800 border border-transparent hover:border-gray-600;
-   text-decoration: none
+  @apply block rounded-md px-3 py-2 text-xs font-medium text-gray-400
+   hover:text-gray-300  hover:bg-gray-800 border border-transparent hover:border-gray-600 no-underline;
+}
+.dash-nav-list.active{
+  @apply text-gray-300 bg-gray-800 border border-gray-600;
 }
 
 /* create -shipment */
