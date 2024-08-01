@@ -64,7 +64,7 @@ export default function MpsDataTable({
                     <li className="" >
                         {
                             (row.response.response[0].status === 'REQUEST_RECEIVED') &&
-                            <Link href={`/dashboard/list-shipment/mps/${row._id}`}
+                            <Link href={`/dashboard/mps-shipment/${row._id}`}
                                 className='bg-green-500 text-green-100 px-2 py-2 rounded uppercase no-underline' >Show label</Link>
                         }
                     </li>
