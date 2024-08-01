@@ -29,6 +29,9 @@ export async function POST(req: NextRequest) {
         const newQuery = searchParams.get('new');
 
         const data = await req.json();
+
+        console.log(data, data.services[0].service_details[0].shipments)
+
         const authorizationHeader = req.headers.get('authorization');
 
         const apifetch = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/shipments/create`, {
@@ -44,7 +47,7 @@ export async function POST(req: NextRequest) {
         });
         const responseData = await apifetch.json() as EkartCreateShipRes;
         // console.dir(data.services[0].service_details[0].service_data);
-        console.log(apifetch, responseData)
+        // console.log(apifetch, responseData)
 
         if (apifetch.status === 200) {
 

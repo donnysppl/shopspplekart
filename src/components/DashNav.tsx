@@ -29,6 +29,19 @@ const dashNavList = [
                 innernavlink: "/dashboard/bulk-label"
             }
         ]
+    },
+    {
+        navhead: "MPS Shipment",
+        navlink: [
+            {
+                innernavname: "Create MPS Shipment",
+                innernavlink: "/dashboard/mps"
+            },
+            {
+                innernavname: "MPS List Shipment",
+                innernavlink: "/dashboard/mps-shipment"
+            },
+        ]
     }
 ]
 

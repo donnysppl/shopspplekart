@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from "next/server";
 import fetch from "node-fetch";
 
@@ -6,10 +7,21 @@ interface resp{
     message:String,
     result:any
 }
+
 export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
     try {
-        const apifetch = await fetch(`${process.env.NEXT_PUBLIC_ORDER_LINK}/api/ekartcon/orderlist`, {
+
+        const searchParams = req.nextUrl.searchParams;
+        // console.log(searchParams)
+
+        const page = searchParams.get('page');
+        const limit = searchParams.get('limit');
+        const search = searchParams.get('search');
+        const status = searchParams.get('status');
+
+        const apifetch = await fetch(`${process.env.NEXT_PUBLIC_ORDER_LINK}/api/order/limit?page=${page ? page : 1}&&limit=${limit ? limit : 10}&&search=${search}&&status=${status}`, {
             method: 'GET',
             headers: {
                 'Access-Control-Allow-Origin': `${process.env.NEXT_PUBLIC_ALLOW_ORIGIN}`,
@@ -20,10 +32,7 @@ export async function GET(req: NextRequest) {
         })
         const responseData = await apifetch.json() as resp;
         // console.log(responseData);
-        return NextResponse.json({
-            status: 200,
-            message: 'Success' , result: responseData.result
-        }, { status: 200 })
+        return NextResponse.json(responseData, { status: 200 })
     } catch (error) {
         console.log(error)
         return NextResponse.json({

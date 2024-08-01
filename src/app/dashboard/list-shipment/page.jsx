@@ -2,6 +2,7 @@
 
 import CommonTable from '@/components/CommonTable';
 import onCancelShipment from '@/helper/Helper';
+import moment from 'moment';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -97,6 +98,10 @@ export default function ListShipment() {
         {
             header: 'Request Status',
             accessorFn: (row, index) => row.resultarray[0].response[0].status,
+        },
+        {
+            header: 'Date',
+            accessorFn: (row, index) => moment(row.createdAt).format("MMM Do YY"),
         },
         {
             header: 'Action',

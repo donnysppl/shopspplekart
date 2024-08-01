@@ -123,20 +123,30 @@ export interface Links {
 export interface SelfEntityOrCollectionEntity {
   href: string;
 }
-
+export interface SourceDatab {
+  first_name: string;
+  address_line1: string;
+  address_line2: string;
+  pincode: string;
+  city: string;
+  state: string;
+  primary_contact_number: string;
+  landmark: string;
+  email_id: string;
+}
 
 
 export interface SourceData {
-  first_name? : string;
-  address_line1? : string;
-  address_line2? : string;
-  pincode? : string;
-  city? : string;
-  state? : string;
-  primary_contact_number? : string;
-  landmark? : string;
-  email_id? : string;
-  location_code? : string
+  first_name?: string;
+  address_line1?: string;
+  address_line2?: string;
+  pincode?: string;
+  city?: string;
+  state?: string;
+  primary_contact_number?: string;
+  landmark?: string;
+  email_id?: string;
+  location_code?: string
 }
 export interface DestinationData {
   first_name: string;
@@ -150,6 +160,41 @@ export interface DestinationData {
   email_id: string;
   alternate_contact_number: string;
 }
+
+
+export interface GlobalData {
+  g_tracking_id: string,
+  amount_to_collect: string,
+  shipment_value: string,
+  hsn: string,
+  ern: string,
+  total_weight: string,
+  total_tax_value: string,
+  total_sale_value: string,
+  cgst: string,
+  sgst: string,
+  igst: string,
+  order_id: string,
+  invoice_id: string,
+  eway_bill_number: string,
+  seller_reg_name: string,
+  gstin_id: string,
+}
+
+export interface ProductData {
+  [key: string]: string | boolean,
+  tracking_id:string,
+  product_id:string,
+  product_title:string,
+  category:string,
+  length:string,
+  height:string,
+  weight:string,
+  breadth:string,
+  isDangerous:boolean,
+  isFragile:boolean,
+}
+
 export interface ShipmentItemDetail {
   product_id: string;
   product_title: string;
@@ -171,7 +216,7 @@ export interface ShipmentItemDetail {
   brand_name: string;
   eway_bill_number: string;
   tracking_id: string;
-  value:number;
+  value: number;
 }
 export interface ShipmentDimension {
   length: number;
@@ -233,7 +278,7 @@ export interface EkartCreateResonse {
   status?: string;
   status_code?: number;
   is_parked?: string;
-  message?:any;
+  message?: any;
 }
 
 export interface EkartCreateShipRes {
@@ -444,3 +489,109 @@ export interface Sender {
   address2: string
 }
 
+export interface orderInptype {
+  _id?: string
+  email: string;
+  name: string;
+  phone: number;
+  address: string;
+  city: string;
+  state: string;
+  pincode: number;
+  companyname: string;
+  totalbill: number;
+  ship_add: boolean;
+  ship_address: {
+    email: string;
+    name: string;
+    phone: number;
+    address: string;
+    city: string;
+    state: string;
+    pincode: number;
+    companyname: string;
+  };
+  orderprod: Array<{
+    productname: string;
+    productId: string;
+    productslug: string;
+    productmodel: string;
+    productnormalprice: number;
+    productsaleprice: number;
+    quantity: number;
+    coupon: string,
+  }>;
+  status: string;
+  orderid: string;
+  sppl_orderid: string;
+  paymentid: string;
+  paymentdate: string;
+  coupon?: string,
+  totalprodprice: number,
+  discountammount?: number,
+  ekartData: Array<{
+    trackingID: string;
+  }>;
+  createdAt: string
+}
+
+export interface FormErrors {
+  [key: string]: string | undefined;
+}
+
+export enum AddMPSRoutes {
+  SOURCE_INFO  = '/mps/step-one',
+  DESTINATION_INFO = '/mps/step-two',
+}
+
+export interface SourceAddressDb {
+  first_name: string;
+  address_line1: string;
+  address_line2: string;
+  pincode: string;
+  city: string;
+  state: string;
+  primary_contact_number: string;
+  landmark: string;
+  email_id: string;
+  alternate_contact_number?: string;
+}
+
+export interface GlobalDataDB {
+  g_tracking_id: string;
+  amount_to_collect: string;
+  shipment_value: string;
+  hsn: string;
+  ern: string;
+  total_weight: string;
+  total_tax_value: string;
+  total_sale_value: string;
+  cgst: string;
+  sgst: string;
+  igst: string;
+  order_id: string;
+  invoice_id: string;
+  eway_bill_number: string;
+  seller_reg_name: string;
+  gstin_id: string;
+}
+
+export interface ShipmentData {
+  tracking_id: string;
+  product_id: string;
+  product_title: string;
+  category: string;
+  length: string;
+  height: string;
+  weight: string;
+  breadth: string;
+  isDangerous: boolean;
+  isFragile: boolean;
+}
+
+export interface ShipmentInfo {
+  sourceData: Address;
+  destiData: Address;
+  globalData: GlobalData;
+  shipmentData: ShipmentData[];
+}
